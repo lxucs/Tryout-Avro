@@ -47,8 +47,8 @@ public class TryoutAvro {
 
         // Serialize data using Reflect
         File fileR = new File("users.avro");
-        DatumWriter<User> writerR = new ReflectDatumWriter<>();  // Serialize objects to in-memory binary data
-        DataFileWriter<User> outR = new DataFileWriter<>(writerR).create(schema, fileR);    // Write binary data to file
+        DatumWriter<User> writerR = new ReflectDatumWriter(User.class);  // Serialize objects to in-memory binary data
+        DataFileWriter<User> outR = new DataFileWriter(writerR).create(schema, fileR);    // Write binary data to file
 
         outR.append(u1);
         outR.append(u2);
@@ -56,8 +56,9 @@ public class TryoutAvro {
         log.info("Serialize objects to file...\n");
 
         // Deserialize data using Reflect
-        DatumReader<User> readerR = new ReflectDatumReader<>();
-        DataFileReader<User> inR = new DataFileReader<>(fileR, readerR);
+        DatumReader<User> readerR = new ReflectDatumReader(User.class);
+        // DatumReader<User> readerR = new ReflectDatumReader();    // This will also work!
+        DataFileReader<User> inR = new DataFileReader(fileR, readerR);
         log.info("Deserialize objects from file...");
         for(User u : inR) {
             log.info(u.toString());
@@ -89,8 +90,8 @@ public class TryoutAvro {
 
         // Serialize data using Specific
         File fileS = new File("UserSpecific.avro");
-        DatumWriter<UserSpecific> writerS = new SpecificDatumWriter<>();
-        DataFileWriter<UserSpecific> outS = new DataFileWriter<>(writerS).create(schema, fileS);
+        DatumWriter<UserSpecific> writerS = new SpecificDatumWriter(UserSpecific.class);
+        DataFileWriter<UserSpecific> outS = new DataFileWriter(writerS).create(schema, fileS);
 
         outS.append(u1);
         outS.append(u2);
@@ -98,8 +99,9 @@ public class TryoutAvro {
         log.info("Serialize objects to file...\n");
 
         // Deserialize data using Specific
-        DatumReader<UserSpecific> readerS = new SpecificDatumReader<>();
-        DataFileReader<UserSpecific> inS = new DataFileReader<>(fileS, readerS);
+        DatumReader<UserSpecific> readerS = new SpecificDatumReader(UserSpecific.class);
+        // DatumReader<UserSpecific> readerS = new SpecificDatumReader();   // This will also work!
+        DataFileReader<UserSpecific> inS = new DataFileReader(fileS, readerS);
         log.info("\nDeserialize objects from file using Avro Specific...");
         for(UserSpecific u : inS) {
             log.info(u.toString());
